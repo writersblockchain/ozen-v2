@@ -1,5 +1,4 @@
 import {ethers} from 'ethers';
-import Nav from './components/Nav'
 import './App.scss'
 import React from 'react'
 import {GetBalance} from './GetBalance.js';
@@ -7,6 +6,7 @@ import {StartFunction} from './StartFunction.js';
 import {StopFunction} from './StopFunction.js';
 import userAppArtifact from "./abis/UserApp.json"
 import { ReactComponent as PlayIcon } from './svgs/play.svg'
+import {Link} from "react-router-dom";
 
 const ozenTokenAddress = "0xab573EC236CAf73d48cCFB00C116943A15be7f35";
 const userAppAddress = "0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174";
@@ -93,7 +93,7 @@ const songs =
 },
 {
   id: 4,
-  category_id: 1,
+  category_id: 3,
   title: 'Essence',
   coverUri:
     'https://hackathon.skalenodes.com/fs/downright-royal-saiph/6558e89b3399a2bc82bfc98b0bce6e13163243f1/5.jpeg',
@@ -105,7 +105,7 @@ const songs =
 },
 {
   id: 5,
-  category_id: 1,
+  category_id: 3,
   title: 'Free Mind',
   coverUri:
     'https://hackathon.skalenodes.com/fs/downright-royal-saiph/6558e89b3399a2bc82bfc98b0bce6e13163243f1/4.jpeg',
@@ -164,6 +164,11 @@ function App() {
     setTimeout(setBalanceContinuously, 500);
   }
 
+  function simulateBalance() {  
+    
+    setTimeout(simulateBalance, 50);
+  }
+
   function playStation(stationId) {
     const station = stations.find(x => x.id === stationId);
     setStationId(station.id);
@@ -171,7 +176,6 @@ function App() {
     setStationSongId(station.songs[0]);
     playSong(station.songs[0], false);
   }
-
 
   function handleSongEnded() {
     console.log('song ended');
@@ -185,12 +189,13 @@ function App() {
       playSong(station.songs[newSongIndex], false);
     }
     else {
-      handleStreamFinished();
+      // handleStreamFinished();
     }
   }
 
   function handleStreamFinished() {
-    StopFunction();
+    const song = songs.find(x => x.id === songId);
+    StopFunction(userAppAddress, artistAppAddress, ozenTokenAddress, null, song.promoted);
   }
 
   function playSong(songId, endStationPlay) {  
@@ -217,11 +222,24 @@ function App() {
     StartFunction(userAppAddress, artistAppAddress, ozenTokenAddress, ozenABI, song.flowRate, signer, song.promoted);
   }
 
-
   return (
     <div className='outerWrap'>
       <div className="App">
-        <Nav/>     
+        <div className='navBar'>
+          <div className='logo'></div>
+          <ul>
+            <Link to='/'><li className='active'>Home</li></Link>
+            <Link to='/search'><li>Search</li></Link>
+            <Link to='/your-library'><li>Your Library</li></Link>
+          </ul>
+          <div style={{fontSize: '2em', fontWeight: '700', color: 'white', padding: '12px' }}>
+            {balance}
+          </div>        
+          <div className='cookies'>
+            <span>Coded by</span>
+            <span>Chainshot devs</span>
+          </div>
+        </div>          
         <div className="main">
           <div className="upperNav">
             <img className='ozen-logo' src="/ozen_white.png" alt='' />
@@ -231,13 +249,34 @@ function App() {
           </div>
           <div className='mainContent'>
           <div>
-          {categories.map((category, id) => (
-            <div className="cardsWrap" key={id}>
+          {categories.filter(category => category.id === 1).map((category) => (
+            <div className="cardsWrap" key={category.id}>
               <h2>{category.name}</h2>
               <p className="subText">{category.tagline}</p>
               <div className='cardsWrapInner'>    
-                {songs.filter(song => song.category_id === id).map((song, id) => (
-                  <div className="card" key={id} onClick={() => playSong(song.id, true)}>
+                {stations.map((station) => (
+                  <div className="card" key={station.id} onClick={() => playStation(station.id)}>
+                    <div className="cardImage">
+                      <img src="" alt=''></img>
+                    </div>
+                    <div className='cardContent'>
+                      <h3>{station.name}</h3>
+                    </div>
+                    <span className="playIcon">
+                    <PlayIcon/>
+                    </span> 
+                  </div>           
+                ))}
+              </div>
+            </div>
+          ))}
+          {categories.filter(category => category.id !== 1).map((category) => (
+            <div className="cardsWrap" key={category.id}>
+              <h2>{category.name}</h2>
+              <p className="subText">{category.tagline}</p>
+              <div className='cardsWrapInner'>    
+                {songs.filter(song => song.category_id === category.id).map((song) => (
+                  <div className="card" key={song.id} onClick={() => playSong(song.id, true)}>
                     <div className="cardImage">
                       <img src={song.coverUri} alt=''></img>
                     </div>
@@ -263,7 +302,6 @@ function App() {
         <audio id="player" controls src="" type="audio/mpeg" onEnded={handleSongEnded} onPause={handleStreamFinished}>
             Your browser does not support the audio element.
         </audio>        
-        <button onClick={handleStreamFinished}/>
         <img className="coverImage" alt='' src={songCoverUri}/>
       </div>
     </div>  
