@@ -267,3 +267,16 @@ body {
   }
 }
 
+button {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  font-family: aeroport-bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: #282828;
+  color: white;
+}
+
