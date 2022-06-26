@@ -43,7 +43,7 @@ const categories = [
 const stations = 
 [{
   id: 1,
-  name: "Ozen Stream",
+  name: "ōzen Stream",
   songs: [4,3,2],
   stationAppAddress: "0x00",
 }
@@ -155,12 +155,12 @@ function App() {
   }
 
   async function setBalanceContinuously() {
-    console.log('setBalanceContinuously');
+    // console.log('setBalanceContinuously');
     // console.log('signer:');
     // console.log(signer);
     if(signer) {
       const balance = await GetBalance(userAppAddress, artistAppAddress, radioAppAddress, ozenTokenAddress, ozenABI, signer);
-      console.log('balance %s', balance.userAppBalance);
+      // console.log('balance %s', balance.userAppBalance);
       setBalance((Math.round(balance.userAppBalance * 1000) / 1000).toLocaleString("en-US"));
     }    
     setTimeout(setBalanceContinuously, 500);
@@ -171,7 +171,7 @@ function App() {
     setStationId(station.id);
     setStationName(station.name);
     setStationSongId(station.songs[0]);
-    playSong(station.songs[0], false);
+    playSong(station.songs[0], false,true);
   }
 
   function handleSongEnded() {
@@ -183,7 +183,7 @@ function App() {
       let newSongIndex = currentSongIndex + 1;
       if(newSongIndex >= station.songs.length) newSongIndex = 0;
       setStationSongId(station.songs[newSongIndex]);
-      playSong(station.songs[newSongIndex], false);
+      playSong(station.songs[newSongIndex], false,true);
     }
     else {
       // handleStreamFinished();
@@ -195,7 +195,7 @@ function App() {
     StopFunction(userAppAddress, artistAppAddress, ozenTokenAddress, null, song.promoted);
   }
 
-  async function playSong(songId, endStationPlay) {  
+  async function playSong(songId, endStationPlay, free) {  
     console.log('playing songid: ' + songId);
     // End any station play if just this song was selected
     if(endStationPlay) {
@@ -207,7 +207,11 @@ function App() {
     const song = songs.find(x => x.id === songId);
 
     // Start flow
-    await StartFunction(userAppAddress, artistAppAddress, ozenTokenAddress, ozenABI, song.flowRate, signer, song.promoted);
+    if(!free) {
+
+      await StartFunction(userAppAddress, artistAppAddress, ozenTokenAddress, ozenABI, song.flowRate, signer, song.promoted);
+
+    }
    
     // Play song    
     const player = document.querySelector('#player');
