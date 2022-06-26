@@ -10,10 +10,7 @@ async function StartFunction(userAppAddress, artistAppAddress, ozenTokenAddress,
     console.log(`userAppAddress ${userAppAddress}`);
     console.log(`artistAppAddress ${artistAppAddress}`);
     console.log(`ozenTokenAddress ${ozenTokenAddress}`);
-    console.log(`userAppAbi ${userAppAbi}`);
-    console.log(`flowRate ${flowRate}`);
 
-    console.log(`promoted ${promoted}`);
     
     const userAppContract = new ethers.Contract(userAppAddress, userAppABI, signer2);
 
