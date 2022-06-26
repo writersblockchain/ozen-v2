@@ -19,17 +19,33 @@ src: url(./fonts/Aeroport-bold.ttf);
   height: 30px;
   }
 
+#btn-connect {
+  max-width: 120px;
+  position: absolute;
+  right: 14rem;
+  top: 0.6rem;
+  color: $greyText;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+
 .coverImage {
   width: 70px;
   height: 70px;
   border-radius: 10%;
   margin: 15px;
-  margin-bottom: 0px; 
+  margin-bottom: 14px; 
 
 }
 
+
+
 .artist{
-  margin-rigt: auto;
+  margin-right: auto;
 }
 
 
@@ -201,7 +217,7 @@ body {
     .cardsWrapInner {
       display: grid;
       grid-gap: 16px;
-      grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
   
       a {
         color: inherit;
@@ -219,6 +235,8 @@ body {
       padding: 1.2rem;
       box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
       position: relative;
+      max-width: 266.8;
+      min-width: 266.8;
       &:hover {
         .playIcon {
           opacity: 1;

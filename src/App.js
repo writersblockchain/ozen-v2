@@ -46,12 +46,14 @@ const stations =
   name: "Ozen Stream",
   songs: [4,3,2],
   stationAppAddress: "0x00",
-}, {
-  id: 2,
-  name: "New Finds",
-  songs: [5,1],
-  stationAppAddress: "0x00",
-}]
+}
+// , {
+//   id: 2,
+//   name: "New Finds",
+//   songs: [5,1],
+//   stationAppAddress: "0x00",
+// }
+]
 
 // Song database
 const songs = 
@@ -69,20 +71,20 @@ const songs =
 },
 {
   id: 2,
-  category_id: 3,
+  category_id: 2,
   title: 'Break It Off',
   coverUri:
     'https://hackathon.skalenodes.com/fs/downright-royal-saiph/6558e89b3399a2bc82bfc98b0bce6e13163243f1/3.jpeg',
   artist: 'LPinkPantheress',
   uri: "https://hackathon.skalenodes.com/fs/downright-royal-saiph/6558e89b3399a2bc82bfc98b0bce6e13163243f1/3.mp3",
-  promoted: false,
+  promoted: true,
   flowRate: 385802469135802,
   artistAppAddress: "0x0"
 },
 {
   id: 3,
   category_id: 2,
-  title: `There, where it's good`,
+  title: `There, Where It's Good`,
   coverUri:
   "https://hackathon.skalenodes.com/fs/downright-royal-saiph/6558e89b3399a2bc82bfc98b0bce6e13163243f1/1.jpeg",
   artist: 'ANIKV',
@@ -124,7 +126,7 @@ function App() {
   const [songTitle, setSongTitle] = React.useState("");
   const [songArtist, setSongArtist] = React.useState("");
   const [songUri, setSongUri] = React.useState("");
-  const [songCoverUri, setSongCoverUri] = React.useState("./images/default-cover.png");
+  const [songCoverUri, setSongCoverUri] = React.useState("https://img.spacergif.org/v1/spacer.gif");
   const [address, setAddress] = React.useState("Connect");
   const [balance, setBalance] = React.useState(0);
   const [stationId, setStationId] = React.useState(0);
@@ -146,27 +148,22 @@ function App() {
       signer = provider.getSigner(0);
       const connectedUserAddress = await signer.getAddress();
       setAddress(connectedUserAddress);    
-      setBalanceContinuously();      
+      setBalanceContinuously();   
     } else {
       console.log("MetaMask not available");
     }   
   }
 
   async function setBalanceContinuously() {
-    // console.log('attempting to set balance');
+    console.log('setBalanceContinuously');
     // console.log('signer:');
     // console.log(signer);
     if(signer) {
       const balance = await GetBalance(userAppAddress, artistAppAddress, radioAppAddress, ozenTokenAddress, ozenABI, signer);
-      // console.log('balance %s', balance.userAppBalance);
-      setBalance(balance.userAppBalance);
+      console.log('balance %s', balance.userAppBalance);
+      setBalance((Math.round(balance.userAppBalance * 1000) / 1000).toLocaleString("en-US"));
     }    
     setTimeout(setBalanceContinuously, 500);
-  }
-
-  function simulateBalance() {  
-    
-    setTimeout(simulateBalance, 50);
   }
 
   function playStation(stationId) {
@@ -198,7 +195,7 @@ function App() {
     StopFunction(userAppAddress, artistAppAddress, ozenTokenAddress, null, song.promoted);
   }
 
-  function playSong(songId, endStationPlay) {  
+  async function playSong(songId, endStationPlay) {  
     console.log('playing songid: ' + songId);
     // End any station play if just this song was selected
     if(endStationPlay) {
@@ -207,8 +204,12 @@ function App() {
       setStationSongId(0);
     }
 
-    // Play song
     const song = songs.find(x => x.id === songId);
+
+    // Start flow
+    await StartFunction(userAppAddress, artistAppAddress, ozenTokenAddress, ozenABI, song.flowRate, signer, song.promoted);
+   
+    // Play song    
     const player = document.querySelector('#player');
     player.src = song.uri;
     setSongId(song.id);
@@ -216,10 +217,7 @@ function App() {
     setSongTitle(song.title);
     setSongArtist(song.artist);
     console.log("Song accessed from URI: " + song.uri);
-    player.play();
-
-    // Start flow
-    StartFunction(userAppAddress, artistAppAddress, ozenTokenAddress, ozenABI, song.flowRate, signer, song.promoted);
+    player.play();    
   }
 
   return (
@@ -232,9 +230,7 @@ function App() {
             <Link to='/search'><li>Search</li></Link>
             <Link to='/your-library'><li>Your Library</li></Link>
           </ul>
-          <div style={{fontSize: '2em', fontWeight: '700', color: 'white', padding: '12px' }}>
-            {balance}
-          </div>        
+          <div id="balance" style={{fontSize: '2em', fontWeight: '700', color: 'white', marginTop: '50px', padding: '12px' }}><span style={{fontSize:'.4em', color: '#cccccc'}}>BALANCE<br/></span>{balance}</div>        
           <div className='cookies'>
             <span>Coded by</span>
             <span>Chainshot devs</span>
@@ -257,7 +253,7 @@ function App() {
                 {stations.map((station) => (
                   <div className="card" key={station.id} onClick={() => playStation(station.id)}>
                     <div className="cardImage">
-                      <img src="" alt=''></img>
+                      <img src="./images/ozen_stream_cover.jpg" alt=''></img>
                     </div>
                     <div className='cardContent'>
                       <h3>{station.name}</h3>

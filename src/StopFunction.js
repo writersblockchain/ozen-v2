@@ -14,13 +14,15 @@ async function StopFunction(
     const ozenAddress="0xab573EC236CAf73d48cCFB00C116943A15be7f35";
     const userAddress = "0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174";
 
-//   const PRIVATE_KEY =
-//     "e66c96225cd605559b10405b8c3acd03a43df3637f98a1ea60984e42e79dc015";
+  const PRIVATE_KEY =
+    "e66c96225cd605559b10405b8c3acd03a43df3637f98a1ea60984e42e79dc015";
 
-//   const provider = new ethers.providers.JsonRpcProvider(
-//     "https://polygon-mumbai.g.alchemy.com/v2/0aWYomtIkhZ7DpFAZtNasdu74nL_ZlMf"
-//   );
-//   const signer2 = new ethers.Wallet(PRIVATE_KEY, provider);
+  const provider = new ethers.providers.JsonRpcProvider(
+    "https://polygon-mumbai.g.alchemy.com/v2/0aWYomtIkhZ7DpFAZtNasdu74nL_ZlMf"
+  );
+  const signer2 = new ethers.Wallet(PRIVATE_KEY, provider);
+
+  console.log("Stop Function Called!");
 
 
 
@@ -32,9 +34,9 @@ async function StopFunction(
 
 //   console.log(userAppContract);
 
-await window.ethereum.request({ method: 'eth_requestAccounts'});
-let provider = new ethers.providers.Web3Provider(window.ethereum);
-let signer2 = provider.getSigner(0);
+// await window.ethereum.request({ method: 'eth_requestAccounts'});
+// let provider = new ethers.providers.Web3Provider(window.ethereum);
+// let signer2 = provider.getSigner(0);
 
 const userAppContract = new ethers.Contract(userAddress, userAppABI, signer2);
 
