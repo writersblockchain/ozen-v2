@@ -15,7 +15,7 @@ async function StopFunction(
     const userAddress = "0xa37F2fBdd86B5A686E5733C8B838E3beC9b5d174";
 
   const PRIVATE_KEY =
-    "e66c96225cd605559b10405b8c3acd03a43df3637f98a1ea60984e42e79dc015";
+    "";
 
   const provider = new ethers.providers.JsonRpcProvider(
     "https://polygon-mumbai.g.alchemy.com/v2/0aWYomtIkhZ7DpFAZtNasdu74nL_ZlMf"
