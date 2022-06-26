@@ -8,7 +8,7 @@ async function StopFunction(
   promoted
 ) {
   const PRIVATE_KEY =
-    "e66c96225cd605559b10405b8c3acd03a43df3637f98a1ea60984e42e79dc015";
+    "";
 
   const provider = ethers.providers.JsonRpcProvider(
     "https://polygon-mumbai.g.alchemy.com/v2/0aWYomtIkhZ7DpFAZtNasdu74nL_ZlMf"
